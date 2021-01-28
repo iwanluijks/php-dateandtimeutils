@@ -15,20 +15,19 @@ class DateTimeIntervalDiffHelper
         $this->dateInterval = $dateInterval;
     }
 
+    public function getYears(): int
+    {
+        return $this->dateInterval->y;
+    }
+
     public function getQuarters(): int
     {
         return ($this->getYears() * 4) + intdiv($this->getMonths(), 3);
     }
 
-    public function getYears(): int
-    {
-        return $this->dateInterval->y ?? 0;
-    }
-
     public function getMonths(): int
     {
-        $intervalMonths = $this->dateInterval->m ?? 0;
-        return $this->getYears() * 12 + $intervalMonths;
+        return ($this->getYears() * 12) + $this->dateInterval->m;
     }
 
     public function getWeeks(): int
@@ -36,23 +35,23 @@ class DateTimeIntervalDiffHelper
         return intdiv($this->getDays(), 7);
     }
 
-    public function getSeconds(): int
+    public function getDays(): int
     {
-        return $this->getMinutes() * 60;
-    }
-
-    public function getMinutes(): int
-    {
-        return $this->getHours() * 60;
+        return $this->dateInterval->days;
     }
 
     public function getHours(): int
     {
-        return $this->getDays() * 24;
+        return ($this->getDays() * 24) + $this->dateInterval->h;
     }
 
-    public function getDays(): int
+    public function getMinutes(): int
     {
-        return $this->dateInterval->days ?? 0;
+        return ($this->getHours() * 60) + $this->dateInterval->i;
+    }
+
+    public function getSeconds(): int
+    {
+        return ($this->getMinutes() * 60) + $this->dateInterval->s;
     }
 }
