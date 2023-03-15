@@ -11,11 +11,7 @@ namespace IwanLuijks\PhpDateAndTimeUtils;
  */
 function coalesceZero(...$values)
 {
-    $filtered = array_filter(
-        $values, function ($val) {
-        return $val !== 0;
-    }
-    );
+    $filtered = array_filter($values, static fn ($val) => $val !== 0);
     reset($filtered);
 
     return current($filtered) ?: 0;

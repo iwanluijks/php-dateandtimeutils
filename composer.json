@@ -8,17 +8,24 @@
         }
     ],
     "require": {
-        "php": "^7.4"
+        "php": "^7.4",
+        "iwanluijks/php-contracts": "*"
     },
     "autoload": {
         "exclude-from-classmap": [
             "/Tests/"
         ],
         "files": [
-          "functions.php"
+            "functions.php"
         ],
         "psr-4": {
             "IwanLuijks\\PhpDateAndTimeUtils": ""
         }
+    },
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
     }
 }

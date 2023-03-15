@@ -6,6 +6,7 @@ namespace IwanLuijks\PhpDateAndTimeUtils\TheTime;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
+use IwanLuijks\PhpContracts\Contract;
 use function IwanLuijks\PhpDateAndTimeUtils\coalesceZero;
 
 class Time
@@ -37,9 +38,20 @@ class Time
         // $parts[2] must not be lower than 0 and higher than 59.
 
         $parts = explode($this->partsSeparator, $timeSpec);
-        $this->parts['hour'] = (int) $parts[0];
-        $this->parts['minute'] = (int) $parts[1];
-        $this->parts['second'] = (int) ($parts[2] ?? 00);
+        $hour = (int) $parts[0];
+        $minute = (int) $parts[1];
+        $second = (int) ($parts[2] ?? 00);
+
+        (new Contract('Hour MUST be a number starting from (and including) 0 up until (and including) 23.'))
+                ->requires($hour >= 0 && $hour <= 23);
+        (new Contract('Minute MUST be a number starting from (and including) 0 up until (and including) 59.'))
+                ->requires($minute >= 0 && $minute <= 59);
+        (new Contract('Second MUST be a number starting from (and including) 0 up until (and including) 59.'))
+                ->requires($second >= 0 && $second <= 59);
+
+        $this->parts['hour'] = $hour;
+        $this->parts['minute'] = $minute;
+        $this->parts['second'] = $second;
         $this->composite = (sprintf('%\'02d', $this->parts['hour']) ?: '00'); // We should always have 2 chars.
         $this->composite .= (sprintf('%\'02d', $this->parts['minute']) ?: '00'); // We should always have 2 chars.
         $this->composite .= (sprintf('%\'02d', $this->parts['second']) ?: '00'); // We should always have 2 chars.
@@ -89,7 +101,7 @@ class Time
         return new Time($spec, clone $this->getTimezone());
     }
 
-    public function constrainBackward(TimeInterval $timeInterval, bool $loseRest = false): self
+    public function constrainBackward(TimeInterval $timeInterval, bool $loseRest = false, self $minimumTime = null): self
     {
         $constrainToHour = $timeInterval->h > 0;
         $constrainToMinute = $timeInterval->i > 0;
@@ -126,15 +138,21 @@ class Time
         $spec .= $this->partsSeparator;
         $spec .= (sprintf('%\'02d', $second) ?: '00'); // We should always have 2 chars.
 
-        return new Time($spec, clone $this->getTimezone());
+        $builtTime = new Time($spec, clone $this->getTimezone());
+
+        if ($minimumTime && $builtTime->isBefore($minimumTime)) {
+            return $minimumTime;
+        }
+
+        return $builtTime;
     }
 
     public function diff(Time $time): TimeIntervalDiff
     {
         $timeInterval = new TimeIntervalDiff();
-        $timeInterval->h = coalesceZero($time->getHour()) - coalesceZero($this->getHour());
-        $timeInterval->i = coalesceZero($time->getMinute()) - coalesceZero($this->getMinute());
-        $timeInterval->s = coalesceZero($time->getSecond()) - coalesceZero($this->getSecond());
+        $timeInterval->h = $time->getHour() - $this->getHour();
+        $timeInterval->i = $time->getMinute() - $this->getMinute();
+        $timeInterval->s = $time->getSecond() - $this->getSecond();
         $timeInterval->invert = false;
         $timeInterval->tzFrom = $time->getTimezone();
         $timeInterval->tzTo = $this->getTimezone();
@@ -153,11 +171,11 @@ class Time
         }
 
         if ($timeInterval->s >= 60) {
-            $timeInterval->s = $timeInterval->s - 60;
+            $timeInterval->s -= 60;
             $timeInterval->i += 1;
         }
         if ($timeInterval->i >= 60) {
-            $timeInterval->i = $timeInterval->i - 60;
+            $timeInterval->i -= 60;
             $timeInterval->h += 1;
         }
 
@@ -179,7 +197,8 @@ class Time
         }
 
         return strtr(
-            $format, [
+            $format,
+            [
                 '%H' => $hour,
                 '%i' => $minute,
                 '%s' => $second
@@ -189,7 +208,7 @@ class Time
 
     public function getComposite(): int
     {
-        list($time, $timezone) = explode('|TZ|', $this->composite, 2);
+        [$time, $timezone] = explode('|TZ|', $this->composite, 2);
 
         $datetime = (new DateTime($time, new DateTimeZone($timezone)));
         $datetime->setTimezone(new DateTimeZone('UTC'));
@@ -219,11 +238,15 @@ class Time
 
     public function isAfter(Time $time): bool
     {
-        return $this->diff($time)->invert;
+        $diff = $this->diff($time);
+
+        return $diff->invert && $diff->getSeconds() > 0;
     }
 
     public function isBefore(Time $time): bool
     {
-        return !$this->diff($time)->invert;
+        $diff = $this->diff($time);
+
+        return !$diff->invert && $diff->getSeconds() > 0;
     }
 }
