@@ -9,7 +9,7 @@
     ],
     "require": {
         "php": "^7.4",
-        "iwanluijks/php-contracts": "*"
+        "iwanluijks/php-contracts": "dev-master"
     },
     "autoload": {
         "exclude-from-classmap": [
