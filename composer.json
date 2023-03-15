@@ -4,7 +4,7 @@
     "authors": [
         {
             "name": "Iwan Luijks",
-            "email": "i.luijks@mexaplex.nl"
+            "email": "iwanluijks@gmail.com"
         }
     ],
     "require": {
@@ -17,7 +17,8 @@
         "files": [
           "functions.php"
         ],
-        "psr-4": { "IwanLuijks\\PhpDateAndTimeUtils": "" }
-    },
-    "minimum-stability": "dev"
+        "psr-4": {
+            "IwanLuijks\\PhpDateAndTimeUtils": ""
+        }
+    }
 }
