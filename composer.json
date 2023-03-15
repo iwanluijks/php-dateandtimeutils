@@ -16,10 +16,10 @@
             "/tests/"
         ],
         "files": [
-            "/src/functions.php"
+            "src/functions.php"
         ],
         "psr-4": {
-            "IwanLuijks\\PhpDateAndTimeUtils\\src\\": ""
+            "IwanLuijks\\PhpDateAndTimeUtils\\": "src\\"
         }
     },
     "config": {
