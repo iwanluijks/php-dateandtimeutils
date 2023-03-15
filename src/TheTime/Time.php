@@ -186,6 +186,12 @@ class Time
         return $timeInterval;
     }
 
+    /**
+     * $format specification:
+     * - %H for hour
+     * - %i for minute
+     * - %s for second
+     */
     public function format(?string $format = null): string
     {
         $hour = (sprintf('%\'02d', $this->parts['hour']) ?: '00');

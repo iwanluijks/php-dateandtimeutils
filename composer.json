@@ -13,13 +13,13 @@
     },
     "autoload": {
         "exclude-from-classmap": [
-            "/Tests/"
+            "/tests/"
         ],
         "files": [
-            "functions.php"
+            "/src/functions.php"
         ],
         "psr-4": {
-            "IwanLuijks\\PhpDateAndTimeUtils\\": ""
+            "IwanLuijks\\PhpDateAndTimeUtils\\src\\": ""
         }
     },
     "config": {
