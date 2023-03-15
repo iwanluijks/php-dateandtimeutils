@@ -19,7 +19,7 @@
             "functions.php"
         ],
         "psr-4": {
-            "IwanLuijks\\PhpDateAndTimeUtils": ""
+            "IwanLuijks\\PhpDateAndTimeUtils\\": ""
         }
     },
     "config": {
