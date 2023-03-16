@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace IwanLuijks\PhpDateAndTimeUtils;
+namespace IwanLuijks\PhpDateAndTimeUtils\DateAndTime;
 
 use DateInterval;
 use function intdiv;

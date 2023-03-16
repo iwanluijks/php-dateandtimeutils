@@ -5,9 +5,9 @@ namespace IwanLuijks\PhpDateAndTimeUtils\TheTime;
 
 class TimeInterval
 {
-    public ?string $h;
-    public ?string $i;
-    public ?string $s;
+    public ?int $h = null;
+    public ?int $i = null;
+    public ?int $s = null;
 
     public function __construct(?string $intervalSpec = null)
     {

@@ -7,7 +7,6 @@ use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use IwanLuijks\PhpContracts\Contract;
-use function IwanLuijks\PhpDateAndTimeUtils\coalesceZero;
 
 class Time
 {
@@ -150,6 +149,8 @@ class Time
     public function diff(Time $time): TimeIntervalDiff
     {
         $timeInterval = new TimeIntervalDiff();
+        $timeComposite = $time->getComposite();
+        $thisComposite = $this->getComposite();
         $timeInterval->h = $time->getHour() - $this->getHour();
         $timeInterval->i = $time->getMinute() - $this->getMinute();
         $timeInterval->s = $time->getSecond() - $this->getSecond();
@@ -157,7 +158,7 @@ class Time
         $timeInterval->tzFrom = $time->getTimezone();
         $timeInterval->tzTo = $this->getTimezone();
 
-        if ($time->getComposite() < $this->getComposite()) {
+        if ($timeComposite < $thisComposite) {
             $timeInterval->invert = true;
             $timeInterval->i = 60 - $timeInterval->i;
             $timeInterval->s = 60 - $timeInterval->s;

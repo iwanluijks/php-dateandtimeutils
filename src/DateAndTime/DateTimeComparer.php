@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\DateTimeService;
+namespace IwanLuijks\PhpDateAndTimeUtils\DateAndTime;
 
 class DateTimeComparer
 {
@@ -14,10 +14,10 @@ class DateTimeComparer
     {
         if ($dateTime1 < $dateTime2) {
             return -1;
-        }
-        if ($dateTime1 > $dateTime2) {
+        } elseif ($dateTime1 > $dateTime2) {
             return 1;
         }
+
         return 0;
     }
 
